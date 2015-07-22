@@ -142,6 +142,7 @@ class BlobView(ScrollableView):
 
     def drag_blob(self, blob, x0, y0):
         start_pos = blob.get_position()
+        self.model.set_ontop(blob)
         for event in self.track_mouse():
             x, y = event.position
             self.model.move_blob(blob, x - x0, y - y0)
@@ -185,6 +186,12 @@ class BlobDoc(Document):
             if blob.contains(x, y):
                 return blob
         return None
+
+    def set_ontop(self, blob):
+        if self.blobs.index(blob) != len(self.blobs)-1:
+            print "run"
+            self.blobs.pop(self.blobs.index(blob))
+            self.blobs.append(blob)
 
     def move_blob(self, blob, dx, dy):
         self.notify_views('blob_changed', blob)
