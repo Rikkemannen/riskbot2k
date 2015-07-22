@@ -17,7 +17,8 @@ from GUI import Application, ScrollableView, Document, Window, Cursor, rgb, Font
 from GUI.Files import FileType
 from GUI.Geometry import pt_in_rect, offset_rect, rects_intersect
 from GUI.StdColors import black, red, clear, green, white
-from controller.game_actions import war
+from controller.game_actions import war, conquer_territory
+from Tkinter import Tk,Scale,Button, mainloop, HORIZONTAL
 
 GRID_SIZE = 50
 
@@ -141,18 +142,33 @@ class BlobView(ScrollableView):
                 self.drag_blob(blob, x, y)
 
     def drag_blob(self, blob, x0, y0):
+        def attacker_chooser(max_soldiers):
+            master = Tk()
+            w1 = Scale(master, from_=0, to=max_soldiers, orient=HORIZONTAL)
+            w1.set(19)
+            w1.pack()
+            Button(master, text='Ok', command=master.destroy).pack()
+            mainloop()
+
         start_pos = blob.get_position()
         self.model.set_ontop(blob)
+        blob.set_war_status('attacker')
         for event in self.track_mouse():
             x, y = event.position
             self.model.move_blob(blob, x - x0, y - y0)
             x0 = x
             y0 = y
         neighbour_territory = self.model.find_blob(x,y)
-        if neighbour_territory:
+        if neighbour_territory != blob:
+            neighbour_territory.set_war_status('defender')
             if neighbour_territory.get_owner_name() != blob.get_owner_name() and blob.get_soldiers() > 1:
-                print war(blob.territory, neighbour_territory.territory, blob.get_soldiers()-1).get_owner()
+                attacking_soldiers = attacker_chooser(blob.get_soldiers()-1)
+                #winner = attacker_chooser(blob, neighbour_territory, blob.get_soldiers()-1)
+                winner = war(blob, neighbour_territory, attacking_soldiers)
+                looser = blob if winner != blob else neighbour_territory
+                conquer_territory(winner,looser)
                 self.model.set_blob_position(blob,start_pos[0], start_pos[1])
+                print "Winner is: " + winner.territory.get_owner() + "!"
             else:
                 print "Attacking yourself, or territory has only 1 soldier."
                 self.model.set_blob_position(blob,start_pos[0], start_pos[1])
@@ -215,7 +231,7 @@ class Blob:
     def __init__(self, x, y, territory_obj):
         self.rect = (x, y, x + GRID_SIZE, y + GRID_SIZE)
         self.territory_obj = territory_obj
-
+        self.war_status = 'neutral'
     def contains(self, x, y):
         return pt_in_rect((x, y), self.rect)
 
@@ -277,3 +293,13 @@ class Blob:
     @territory.setter
     def set_territory_obj(self):
         return self.territory_obj
+
+
+    def get_war_status(self):
+        return self.war_status
+
+
+    def set_war_status(self, s):
+        self.war_status = s
+
+
