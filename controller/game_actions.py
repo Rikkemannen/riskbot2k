@@ -33,11 +33,11 @@ def battle(attacker, defender, soldiers_left):
             defender_dies.pop(defender_dies.index(combat_results))
     return defender.get_soldiers() == 0 or attacker.get_soldiers() == soldiers_left
 
-def conquer_territory(winner, looser):
+def conquer_territory(winner, looser, soldiers_left):
     if winner.war_status == 'attacker':
         looser.territory.set_owner(winner.territory.get_owner_obj())
-        looser.territory.set_soldiers(winner.territory.get_soldiers()-1)
-        winner.territory.set_soldiers(1)
+        looser.territory.set_soldiers(soldiers_left)
+        winner.territory.set_soldiers(winner.territory.get_soldiers()- soldiers_left)
 
 def war(attacker, defender, attacking_soldiers):
     soldiers_left = attacker.territory.get_soldiers() - attacking_soldiers

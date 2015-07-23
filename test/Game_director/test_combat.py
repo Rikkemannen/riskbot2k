@@ -3,6 +3,9 @@ import unittest
 from mock import patch
 from controller.game_actions import war, battle, throw_die
 from model.world import Territory
+from view.blobapp import Blob
+from controller.setup_board import Player
+from controller.game_actions import conquer_territory
 
 class CombatTestCase(unittest.TestCase):
 
@@ -54,5 +57,17 @@ class CombatTestCase(unittest.TestCase):
         res = war(p1,p2, 1)
         self.assertEqual(res, p1)
 
+    #TODO fixa config-problemet! IOError: Reading configspec failed: Config file not found: "..\conf\board_spec.ini".
+    def test_conquer_territory(self):
+        t1 = Territory('',None,3)
+        t2 = Territory('',None,0)
+        p1 = Player('rickard',None)
+        p2 = Player('jonas', None)
+        winner = Blob(0,0,t1)
+        looser = Blob(0,0,t2)
+        winner.set_owner(p1)
+        looser.set_owner(p2)
+        conquer_territory(winner,looser, 2)
+        self.assertEqual(winner.get_soldiers(),1)
 if __name__ == '__main__':
     unittest.main()
