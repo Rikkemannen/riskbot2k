@@ -65,8 +65,10 @@ class CombatTestCase(unittest.TestCase):
         p2 = Player('jonas', None)
         winner = Blob(0,0,t1)
         looser = Blob(0,0,t2)
-        winner.set_owner(p1)
-        looser.set_owner(p2)
+        winner.territory.set_owner(p1)
+        looser.territory.set_owner(p2)
+        winner.set_war_status('attacker')
+        looser.set_war_status('defender')
         conquer_territory(winner,looser, 2)
         self.assertEqual(winner.get_soldiers(),1)
 if __name__ == '__main__':

@@ -169,7 +169,7 @@ class BlobView(ScrollableView):
         else:
             winner = war(blob,defender,1)
             looser = blob if winner != blob else defender
-            soldiers_left = int(slider.get_value()) - (slider.max_value - blob.get_soldiers())
+            soldiers_left = int(slider.get_value()) - (int(slider.max_value) - blob.get_soldiers())
             conquer_territory(winner, looser, soldiers_left)
             self.model.set_blob_position(blob, x, y)
             print "Winner is: " + winner.territory.get_owner() + "!"
