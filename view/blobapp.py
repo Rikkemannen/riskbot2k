@@ -143,6 +143,7 @@ class BlobView(ScrollableView):
         text_field = TextField()
         button.style = 'normal'
         slider = Slider('h')
+
         def set_textfield():
             text_field.set_text(str(int(slider.get_value())))
 
@@ -167,12 +168,13 @@ class BlobView(ScrollableView):
             win.place(text_field, left=170, top=50, right=210, bottom=70)
             win.show()
         else:
-            winner = war(blob,defender,1)
+            winner = war(blob, defender, 1)
             looser = blob if winner != blob else defender
             soldiers_left = int(slider.get_value()) - (int(slider.max_value) - blob.get_soldiers())
             conquer_territory(winner, looser, soldiers_left)
             self.model.set_blob_position(blob, x, y)
             print "Winner is: " + winner.territory.get_owner() + "!"
+
     def drag_blob(self, blob, x0, y0):
         start_pos = blob.get_position()
         self.model.set_ontop(blob)
@@ -187,7 +189,6 @@ class BlobView(ScrollableView):
             neighbour_territory.set_war_status('defender')
             if neighbour_territory.get_owner_name() != blob.get_owner_name() and blob.get_soldiers() > 1:
                 self.open_soldier_chooser(blob, neighbour_territory, start_pos[0], start_pos[1])
-                #winner = war(blob, neighbour_territory, blob.get_soldiers() - 1)
             else:
                 print "Attacking yourself, or territory has only 1 soldier."
                 self.model.set_blob_position(blob, start_pos[0], start_pos[1])

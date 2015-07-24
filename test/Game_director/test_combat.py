@@ -57,8 +57,7 @@ class CombatTestCase(unittest.TestCase):
         res = war(p1,p2, 1)
         self.assertEqual(res, p1)
 
-    #TODO fixa config-problemet! IOError: Reading configspec failed: Config file not found: "..\conf\board_spec.ini".
-    def test_conquer_territory(self):
+    def test_conquer_territory_soldiers_in_winner_territory_after_fight(self):
         t1 = Territory('',None,3)
         t2 = Territory('',None,0)
         p1 = Player('rickard',None)
@@ -71,5 +70,48 @@ class CombatTestCase(unittest.TestCase):
         looser.set_war_status('defender')
         conquer_territory(winner,looser, 2)
         self.assertEqual(winner.get_soldiers(),1)
+
+    def test_conquer_territory_soldiers_in_conquered_territory_after_fight(self):
+        t1 = Territory('',None,3)
+        t2 = Territory('',None,0)
+        p1 = Player('rickard',None)
+        p2 = Player('jonas', None)
+        winner = Blob(0,0,t1)
+        looser = Blob(0,0,t2)
+        winner.territory.set_owner(p1)
+        looser.territory.set_owner(p2)
+        winner.set_war_status('attacker')
+        looser.set_war_status('defender')
+        conquer_territory(winner,looser, 2)
+        self.assertEqual(looser.get_soldiers(),2)
+
+    def test_conquer_territory_soldiers_in_winner_territory_after_fight_1_soldier_left(self):
+        t1 = Territory('',None,2)
+        t2 = Territory('',None,0)
+        p1 = Player('rickard',None)
+        p2 = Player('jonas', None)
+        winner = Blob(0,0,t1)
+        looser = Blob(0,0,t2)
+        winner.territory.set_owner(p1)
+        looser.territory.set_owner(p2)
+        winner.set_war_status('attacker')
+        looser.set_war_status('defender')
+        conquer_territory(winner,looser, 1)
+        self.assertEqual(winner.get_soldiers(),1)
+
+    def test_conquer_territory_soldiers_in_conquered_territory_after_fight_1_soldier_left(self):
+        t1 = Territory('',None,2)
+        t2 = Territory('',None,0)
+        p1 = Player('rickard',None)
+        p2 = Player('jonas', None)
+        winner = Blob(0,0,t1)
+        looser = Blob(0,0,t2)
+        winner.territory.set_owner(p1)
+        looser.territory.set_owner(p2)
+        winner.set_war_status('attacker')
+        looser.set_war_status('defender')
+        conquer_territory(winner,looser, 1)
+        self.assertEqual(looser.get_soldiers(),1)
+
 if __name__ == '__main__':
     unittest.main()

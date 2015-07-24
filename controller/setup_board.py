@@ -4,12 +4,13 @@ from random import randint
 import configobj
 from GUI.StdColors import black, red, clear, green, blue, yellow
 
-from test.conf import test_connections,test_players
+from test.conf import test_connections, test_players
 from model.world import Territory, Board, Continent
 from view.blobapp import BlobApp
 
 board = Board()
-colors = {'black':black,'red':red,'clear':clear,'green':green,'blue':blue,'yellow':yellow}
+colors = {'black': black, 'red': red, 'clear': clear, 'green': green, 'blue': blue, 'yellow': yellow}
+
 
 class Player():
     def __init__(self, name, color):
@@ -23,9 +24,9 @@ class Player():
         return self.color
 
 
-
-
 powned_territories = []
+
+
 def decide_player():
     unique_players = set(powned_territories)
     if len(unique_players) == len(players_list):
@@ -36,6 +37,7 @@ def decide_player():
         player = players_conf.keys()[randint(0, len(players_list) - 1)]
         powned_territories.append(player)
         return players_list[player]
+
 
 if __name__ == '__main__':
     world_conf = configobj.ConfigObj('..\\conf\\earth_world.ini', configspec='..\\conf\\board_spec.ini')
@@ -53,7 +55,6 @@ if __name__ == '__main__':
     for p in players_conf:
         player = Player(p, colors[players_conf[p]['color']])
         players_list[p] = player
-
 
     for continent in world_conf.keys():
         c = Continent(continent)
