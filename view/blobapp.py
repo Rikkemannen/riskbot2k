@@ -90,16 +90,16 @@ class BlobView(ScrollableView):
         drawn_continents = []
         for continent in board.get_world():
             draw_continent(continent, x, y)
-            x += GRID_SIZE * 10
+            x += GRID_SIZE * 5
             y = sy + GRID_SIZE * 2
 
-            rx, ry = x, y
+            rx, ry = self.model.blobs[0].get_position()[0]+150, self.model.blobs[0].get_position()[0] + 200
             ranked_continents = sort_rankings(board.get_world()[continent]['connecting_continents'])
             for x1 in range(0, len(ranked_continents)):
                 if ranked_continents[x1] not in drawn_continents:
                     draw_continent(ranked_continents[x1],rx, ry)
-                    rx += GRID_SIZE * 6
-                    ry = sy + GRID_SIZE * 8
+                    rx += GRID_SIZE * 4
+                    ry += GRID_SIZE * 6
         lista = []
         settet = set()
         for blob in self.model.blobs:
@@ -138,7 +138,7 @@ class BlobView(ScrollableView):
         def start_conquering():
             winner = war(blob, defender, int(slider.get_value()))
             looser = blob if winner != blob else defender
-            soldiers_left = int(slider.get_value()) - (slider.max_value - blob.get_soldiers())
+            soldiers_left = int(slider.get_value()) - (slider.max_value - blob.get_soldiers()-1)
             conquer_territory(winner, looser, soldiers_left)
             self.model.set_blob_position(blob, x, y)
             print "Winner is: " + winner.territory.get_owner() + "!"
@@ -213,7 +213,6 @@ class BlobDoc(Document):
 
     def set_ontop(self, blob):
         if self.blobs.index(blob) != len(self.blobs) - 1:
-            print "run"
             self.blobs.pop(self.blobs.index(blob))
             self.blobs.append(blob)
 

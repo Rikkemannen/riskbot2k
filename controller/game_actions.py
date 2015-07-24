@@ -25,10 +25,12 @@ def battle(attacker, defender, soldiers_left):
         combat_results = combat(max(attacker_dies), max(defender_dies))
         if combat_results == max(attacker_dies) and combat_results != max(defender_dies):
             defender.set_soldiers(defender.get_soldiers()- 1)
+            print defender.get_owner() + "lost one soldier"
             attacker_dies.pop(attacker_dies.index(combat_results))
             defender_dies.pop(defender_dies.index(max(defender_dies)))
         else:
             attacker.set_soldiers(attacker.get_soldiers()- 1)
+            print attacker.get_owner() + "lost one soldier"
             attacker_dies.pop(attacker_dies.index(max(attacker_dies)))
             defender_dies.pop(defender_dies.index(combat_results))
     return defender.get_soldiers() == 0 or attacker.get_soldiers() == soldiers_left
