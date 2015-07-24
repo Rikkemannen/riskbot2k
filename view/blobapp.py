@@ -138,7 +138,9 @@ class BlobView(ScrollableView):
         def start_conquering():
             winner = war(blob, defender, int(slider.get_value()))
             looser = blob if winner != blob else defender
-            soldiers_left = int(slider.get_value()) - (slider.max_value - blob.get_soldiers()-1)
+            soldiers_left = int(slider.get_value() - (slider.max_value+1 - blob.get_soldiers()))
+            print "winner has " + str(winner.territory.get_soldiers()) + " soldiers left."
+            print "looser has " + str(looser.territory.get_soldiers()) + " soldiers left."
             conquer_territory(winner, looser, soldiers_left)
             self.model.set_blob_position(blob, x, y)
             print "Winner is: " + winner.territory.get_owner() + "!"
