@@ -69,9 +69,7 @@ class BlobView(ScrollableView):
                         if name not in d:
                             d.append(name)
             return d
-
-        drawn_continents = []
-        for continent in board.get_world():
+        def draw_continent(continent, x, y):
             if continent not in drawn_continents:
                 drawn_continents.append(continent)
                 for territory in board.get_world()[continent]['territories']:
@@ -88,30 +86,20 @@ class BlobView(ScrollableView):
                             self.model.add_blob(Blob(pos[0], pos[1], connection))
                     x = pos[0]
                     y = pos[1]
-                x += GRID_SIZE * 10
-                y = sy + GRID_SIZE * 2
 
+        drawn_continents = []
+        for continent in board.get_world():
+            draw_continent(continent, x, y)
+            x += GRID_SIZE * 10
+            y = sy + GRID_SIZE * 2
+
+            rx, ry = x, y
             ranked_continents = sort_rankings(board.get_world()[continent]['connecting_continents'])
             for x1 in range(0, len(ranked_continents)):
                 if ranked_continents[x1] not in drawn_continents:
-                    drawn_continents.append(ranked_continents[x1])
-                    for territory in board.get_world()[ranked_continents[x1]]['territories']:
-                        if territory.get_name() not in plopped_regions:
-                            pos = find_pos(x, y)
-                            x = pos[0]
-                            y = pos[1]
-                            self.model.add_blob(Blob(x, y, territory))
-                            plopped_regions.append(territory.get_name())
-                        for connection in territory.get_connections():
-                            if connection.get_name() not in plopped_regions and connection.get_continent() == \
-                                    ranked_continents[x1]:
-                                pos = find_pos(x, y)
-                                plopped_regions.append(connection.get_name())
-                                self.model.add_blob(Blob(pos[0], pos[1], connection))
-                        x = pos[0]
-                        y = pos[1]
-                    x += GRID_SIZE * 10
-                    y = sy + GRID_SIZE * 2
+                    draw_continent(ranked_continents[x1],rx, ry)
+                    rx += GRID_SIZE * 6
+                    ry = sy + GRID_SIZE * 8
         lista = []
         settet = set()
         for blob in self.model.blobs:
